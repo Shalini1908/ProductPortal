@@ -17,6 +17,7 @@ const Products = () => {
     fetchData();
   }, []);
 
+  //FILTER
   const getFilteredProducts = (query, products) => {
     if (!query) {
       return products;
@@ -26,20 +27,26 @@ const Products = () => {
     );
   };
 
+  //SEARCH
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
+
+  //DELETE
   const handleDelete = (productId) => {
     const updatedData = data.filter((product) => product.id !== productId);
     setData(updatedData);
   };
 
+
+  //EDIT
   const handleEdit = (product) => {
     setSelectedProduct(product);
     setShowModal(true);
   };
 
+  //MODAL
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedProduct(null);
