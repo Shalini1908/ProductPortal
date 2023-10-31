@@ -7,38 +7,51 @@ const Products = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [filteredProduct, setFilteredProduct] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       const response = await fetch("https://fakestoreapi.com/products");
       const products = await response.json();
       setData(products);
+      setFilteredProduct(products);
     }
     fetchData();
   }, []);
 
   //FILTER
+
   const getFilteredProducts = (query, products) => {
     if (!query) {
       return products;
     }
-    return products.filter((product) =>
-      product.title.toLowerCase().includes(query.toLowerCase())
-    );
+
+    return products.filter((product) => {
+      const lowerQuery = query.toLowerCase();
+
+      return (
+        product.title.toLowerCase().includes(lowerQuery) ||
+        product.category.toLowerCase().includes(lowerQuery) ||
+        product.price.toString().includes(lowerQuery)
+      );
+    });
   };
+
+  useEffect(() => {
+    const filteredData = getFilteredProducts(searchQuery, data);
+    setFilteredProduct(filteredData);
+  }, [searchQuery, data]);
 
   //SEARCH
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
-
   //DELETE
   const handleDelete = (productId) => {
     const updatedData = data.filter((product) => product.id !== productId);
     setData(updatedData);
   };
-
 
   //EDIT
   const handleEdit = (product) => {
@@ -61,8 +74,6 @@ const Products = () => {
     setSelectedProduct(null);
   };
 
-  const filteredProducts = getFilteredProducts(searchQuery, data);
-
   return (
     <>
       <Navbar />
@@ -76,7 +87,7 @@ const Products = () => {
           />
         </div>
         <div className="products">
-          {filteredProducts.map((el) => (
+          {filteredProduct.map((el) => (
             <div key={el.id} className="product">
               <img src={el.image} alt={el.title} />
               <p>{el.title}</p>
