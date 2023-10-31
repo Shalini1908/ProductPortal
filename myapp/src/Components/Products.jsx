@@ -91,7 +91,6 @@ const Products = () => {
             <div key={el.id} className="product">
               <img src={el.image} alt={el.title} />
               <p>{el.title}</p>
-              <p>{el.brand}</p>
               <p>{el.category}</p>
               <p>{el.price}</p>
 
